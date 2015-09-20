@@ -1,0 +1,17 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	version="2.0">
+	<persistence-unit name="MegalPersistenceUnit">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<properties>
+			<property name="javax.persistence.validation.mode" value="NONE" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<property name="hibernate.ejb.naming_strategy" value="by.rudenkodv.operator.datamodel.util.CustomNamingStrategy" />
+			<property name="hibernate.show_sql" value="false" />
+		    <property name="hibernate.format_sql" value="false"/>
+			<property name="hibernate.use_sql_comments" value="false"/>
+		</properties>
+	</persistence-unit>	
+</persistence>
+
+
