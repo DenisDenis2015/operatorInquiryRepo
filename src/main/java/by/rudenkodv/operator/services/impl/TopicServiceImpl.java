@@ -22,46 +22,59 @@ public class TopicServiceImpl implements TopicService{
 
 	@PostConstruct
 	private void init() {
-		//  од который будет выполнен после создание€ бина
-		// this method will be called by Spring after bean instantiation. Can be
-		// used for any initialization process.
 		LOGGER.info("Instance of Responses is created. Class is: {}",
 				getClass().getName());
 	}
 
 	@Override
 	public Topic get(Long id) {
-		Topic entity = dao.getById(id);
-		return entity;
+		try {
+			Topic entity = dao.getById(id);
+			return entity;
+		} catch (Exception e) {
+			throw new ServiceException("The get method has throwen an exception for id:" + id, e);
+		}
 	}
 
 	@Override
 	public void saveOrUpdate(Topic topic) {
-		if (topic.getId() == null) {
-			LOGGER.debug("Save new: {topic}", topic);
-			dao.insert(topic);
-		} else {
-			LOGGER.debug("Update: {topic}", topic);
-			dao.update(topic);
+		try {
+			if (topic.getId() == null) {
+				dao.insert(topic);
+			} else {
+				dao.update(topic);
+			}
+		} catch (Exception e) {
+			throw new ServiceException("The  saveOrUpdate has throwen an exception for id:" + topic.getId(), e);
 		}
 	}
 
 	@Override
 	public void delete(Topic topic) {
-		LOGGER.debug("Remove: {topic}", topic);
-		dao.delete(topic.getId());
+		try {
+			dao.delete(topic.getId());
+		} catch (Exception e) {
+			throw new ServiceException("The delete has throwen an exception for id:" + topic.getId(), e);
+		}
 
 	}
 
 	@Override
 	public void deleteAll() {
-		LOGGER.debug("Remove all topic");
-		dao.deleteAll();
+		try {
+			dao.deleteAll();
+		} catch (Exception e) {
+			throw new ServiceException("The delete has throwen an exception for id:", e);
+		}
 	}
 
 	@Override
 	public List<Topic> getAllTopic() {
-		return dao.getAll();
+		try {
+			return dao.getAll();
+		} catch (Exception e) {
+			throw new ServiceException("The getAllTopic() has throwen an exception for id:", e);
+		}
 	}
 
 

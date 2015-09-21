@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -19,11 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import by.rudenkodv.operator.model.Inquiry;
 import by.rudenkodv.operator.model.Topic;
-import by.rudenkodv.operator.services.AttributeOfInquiryService;
 import by.rudenkodv.operator.services.InquiryService;
 import by.rudenkodv.operator.services.TopicService;
-
-//@RestController = @Controller + @ResponseBody
 
 @Controller
 public class OperatorController {
@@ -34,9 +30,6 @@ public class OperatorController {
 
 	@Inject
 	private TopicService topicService;
-
-	@Inject
-	private AttributeOfInquiryService attributeOfInquiryService;
 	
 	@RequestMapping(value = "/topics", method = RequestMethod.GET)
 	@Produces({ MediaType.APPLICATION_JSON})
@@ -62,7 +55,6 @@ public class OperatorController {
 		return inquiryService.getAllInquiry();
 	}
 	
-	
 	@Produces({ MediaType.APPLICATION_JSON})
 	@Consumes({ MediaType.APPLICATION_JSON})
 	@RequestMapping(value = "/customers/{customerName}/inquiries/{id}", method = RequestMethod.GET)
@@ -71,8 +63,7 @@ public class OperatorController {
 		Inquiry inquiry =  inquiryService.singleUserInquiry(customerName, id);
 		return inquiry;
 	}
-	
-	
+		
 	@Produces({ MediaType.APPLICATION_JSON})
 	@Consumes({ MediaType.APPLICATION_JSON})
 	@RequestMapping(value = "/customers/{customerName}/inquiries/{id}", method = RequestMethod.PUT)
@@ -81,7 +72,6 @@ public class OperatorController {
 		inquiryService.saveOrUpdate(inquiry);
 		 LOGGER.debug("Update  inquiry by request PUT : /customers/"+inquiry.getCustomerName()+"/inquiries/"+inquiry.getId());
 	}	
-	
 	
 	@Consumes({ MediaType.APPLICATION_JSON})
 	@RequestMapping(value = "/customers/{customerName}/inquiries/{id}", method = RequestMethod.DELETE)
@@ -98,14 +88,4 @@ public class OperatorController {
 		LOGGER.debug("GET inquiry by request string - " + query);
 		return inquiryService.searchByString(query);
 	}
-	
-	/*
-	 * 
-	 *  + Получение списка обращений клиента: GET /customers/{customerName}/inquiries
-	 *  + Получение одного обращения клиента: GET /customers/{customerName}/inquiries/{inquiryId}
-	 *  ? Создание обращения клиента POST /customers/{customerName}/inquiries
-	 *  ? Обновления обращения клиента PUT /customers/{customerName}/inquiries/{inquiryId} 
-	 *  + Удаление обращения DEL / customers/{customerName}/inquiries/{inquiryId}
-	 */
-
 }

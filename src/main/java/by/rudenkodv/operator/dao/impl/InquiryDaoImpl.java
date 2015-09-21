@@ -1,8 +1,6 @@
 package by.rudenkodv.operator.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -11,16 +9,13 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import by.rudenkodv.operator.dao.InquiryDao;
 import by.rudenkodv.operator.model.Inquiry;
 
-
-
 @Repository
-public class InquiryDaoImpl extends AbstractDaoImpl<Long, Inquiry> implements InquiryDao{
+public class InquiryDaoImpl extends AbstractDaoImpl<Long, Inquiry>implements InquiryDao {
 
 	protected InquiryDaoImpl() {
 		super(Inquiry.class);
@@ -28,58 +23,73 @@ public class InquiryDaoImpl extends AbstractDaoImpl<Long, Inquiry> implements In
 
 	@Override
 	public Inquiry singleUserInquiry(String customerName, Long customerId) {
-		CriteriaBuilder cBuilder = getEm().getCriteriaBuilder();
 
-		CriteriaQuery<Inquiry> criteria = cBuilder.createQuery(Inquiry.class);
-		Root<Inquiry> root = criteria.from(Inquiry.class);
+		Inquiry results = null;
 
-		criteria.select(root).where(cBuilder.and(cBuilder.equal(root.get("customerName"), customerName),
-				(cBuilder.equal(root.get("id"), customerId))));
+		try {
+			CriteriaBuilder cBuilder = getEntityManager().getCriteriaBuilder();
 
-		TypedQuery<Inquiry> query = getEm().createQuery(criteria);
+			CriteriaQuery<Inquiry> criteria = cBuilder.createQuery(Inquiry.class);
+			Root<Inquiry> root = criteria.from(Inquiry.class);
 
-		Inquiry results = query.getSingleResult();
+			criteria.select(root).where(cBuilder.and(cBuilder.equal(root.get("customerName"), customerName),
+					(cBuilder.equal(root.get("id"), customerId))));
+
+			TypedQuery<Inquiry> query = getEntityManager().createQuery(criteria);
+
+			results = query.getSingleResult();
+		} catch (Exception e) {
+			throw new DaoException("method singleUserInquiry throw exception", e);
+		}
 
 		return results;
 	}
 
 	@Override
 	public List<Inquiry> listUserInquiry(String customerName) {
-		CriteriaBuilder cBuilder = getEm().getCriteriaBuilder();
+		try {
+			CriteriaBuilder cBuilder = getEntityManager().getCriteriaBuilder();
 
-		CriteriaQuery<Inquiry> criteria = cBuilder.createQuery(Inquiry.class);
-		Root<Inquiry> root = criteria.from(Inquiry.class);
+			CriteriaQuery<Inquiry> criteria = cBuilder.createQuery(Inquiry.class);
+			Root<Inquiry> root = criteria.from(Inquiry.class);
 
-		criteria.select(root).where(cBuilder.and(cBuilder.equal(root.get("customerName"), customerName)));
+			criteria.select(root).where(cBuilder.and(cBuilder.equal(root.get("customerName"), customerName)));
 
-		TypedQuery<Inquiry> query = getEm().createQuery(criteria);
+			TypedQuery<Inquiry> query = getEntityManager().createQuery(criteria);
 
-		List<Inquiry> results = query.getResultList();
+			List<Inquiry> results = query.getResultList();
 
-		return results;
+			return results;
+
+		} catch (Exception e) {
+			throw new DaoException("method listUserInquiry throw exception", e);
+		}
 	}
 
 	@Override
 	public List<Inquiry> searchByString(String str) {
-		
-		
-		CriteriaBuilder cBuilder = getEm().getCriteriaBuilder();
 
-		CriteriaQuery<Inquiry> criteria = cBuilder.createQuery(Inquiry.class);
-		Root<Inquiry> root = criteria.from(Inquiry.class);
-		
-		Expression<String> path = root.get("customerName");
-		
-		Predicate param = cBuilder.like(path, str + "%");
-		
-		
-		criteria.select(root).where(param);
-		
-		TypedQuery<Inquiry> query = getEm().createQuery(criteria);
+		try {
+			CriteriaBuilder cBuilder = getEntityManager().getCriteriaBuilder();
 
-		List<Inquiry> results = query.getResultList();
-		
-		return results;
+			CriteriaQuery<Inquiry> criteria = cBuilder.createQuery(Inquiry.class);
+			Root<Inquiry> root = criteria.from(Inquiry.class);
+
+			Expression<String> path = root.get("customerName");
+
+			Predicate param = cBuilder.like(path, str + "%");
+
+			criteria.select(root).where(param);
+
+			TypedQuery<Inquiry> query = getEntityManager().createQuery(criteria);
+
+			List<Inquiry> results = query.getResultList();
+
+			return results;
+
+		} catch (Exception e) {
+			throw new DaoException("method searchByString throw exception", e);
+		}
 	}
 
 }

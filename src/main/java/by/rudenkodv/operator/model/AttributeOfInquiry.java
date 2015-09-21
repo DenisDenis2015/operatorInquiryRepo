@@ -55,7 +55,4 @@ public class AttributeOfInquiry implements Serializable{
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
-
-
 }

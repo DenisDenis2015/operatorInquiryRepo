@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 import by.rudenkodv.operator.model.AttributeOfInquiry;
-import by.rudenkodv.operator.model.Inquiry;
 
 public interface AttributeOfInquiryService {
 	
@@ -19,10 +18,6 @@ public interface AttributeOfInquiryService {
 	void deleteAll();
 		
 	AttributeOfInquiry get(Long id);
-	
-	//Long getCount();
-	
+		
 	List<AttributeOfInquiry> getAllAttributeOfInquiry();
-
-
 }

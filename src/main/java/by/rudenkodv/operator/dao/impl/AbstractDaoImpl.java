@@ -12,18 +12,18 @@ import org.apache.commons.lang3.Validate;
 
 import by.rudenkodv.operator.dao.AbstractDao;
 
-public abstract class AbstractDaoImpl<ID, Entity> implements
-		AbstractDao<ID, Entity> {
-	
-    protected final Random random = new Random();
+public abstract class AbstractDaoImpl<ID, Entity> implements AbstractDao<ID, Entity> {
 
-	private EntityManager em;
-	public EntityManager getEm() {
-		return em;
+	protected final Random random = new Random();
+
+	private EntityManager entityManager;
+
+	public EntityManager getEntityManager() {
+		return entityManager;
 	}
 
-	public void setEm(EntityManager em) {
-		this.em = em;
+	public void setEm(EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
 	private final Class<Entity> entityClass;
@@ -35,52 +35,81 @@ public abstract class AbstractDaoImpl<ID, Entity> implements
 
 	@Override
 	public Entity getById(ID id) {
-		return em.find(getEntityClass(), id);
+		try {
+			return entityManager.find(getEntityClass(), id);
+		} catch (Exception e) {
+			throw new DaoException("method getById entityManager throw exception" + entityClass.getClass(), e);
+		}
 	}
 
 	@Override
 	public Entity insert(final Entity entity) {
-		em.persist(entity);
+		try {
+			entityManager.persist(entity);
+		} catch (Exception e) {
+			throw new DaoException("method insert entityManager throw exception" + entityClass.getClass(), e);
+		}
 		return entity;
 	}
 
 	@Override
 	public Entity update(Entity entity) {
-		entity = em.merge(entity);
-		em.flush();
-		return entity;
+		try {
+			entity = entityManager.merge(entity);
+			entityManager.flush();
+			return entity;
+		} catch (Exception e) {
+			throw new DaoException("method update entityManager throw exception" + entityClass.getClass(), e);
+		}
 	}
 
 	@Override
 	public void delete(final ID key) {
-		em.remove(em.find(getEntityClass(), key));
+		try {
+			entityManager.remove(entityManager.find(getEntityClass(), key));
+		} catch (Exception e) {
+			throw new DaoException("method delete entityManager throw exception" + entityClass.getClass(), e);
+		}
 	}
 
 	@Override
 	public void delete(List<ID> ids) {
-		em.createQuery(String.format("delete from %s e where e.id in (:ids)",
-				entityClass.getSimpleName())).setParameter("ids", ids).executeUpdate();
+		try {
+			entityManager
+					.createQuery(String.format("delete from %s e where e.id in (:ids)", entityClass.getSimpleName()))
+					.setParameter("ids", ids).executeUpdate();
+		} catch (Exception e) {
+			throw new DaoException("method delete by List<ID> entityManager throw exception" + entityClass.getClass(),
+					e);
+		}
 	}
 
 	@Override
 	public void deleteAll() {
-		final Query q1 = em.createQuery("delete from "+ getEntityClass().getSimpleName());q1.executeUpdate();
-		em.flush();
+		try {
+			final Query q1 = entityManager.createQuery("delete from " + getEntityClass().getSimpleName());
+			q1.executeUpdate();
+			entityManager.flush();
+		} catch (Exception e) {
+			throw new DaoException("method deleteAll entityManager throw exception" + entityClass.getClass(), e);
+		}
 	}
 
 	@Override
 	public List<Entity> getAll() {
-		final CriteriaQuery<Entity> query = em.getCriteriaBuilder()
-				.createQuery(getEntityClass());
-		query.from(getEntityClass());
-		final List<Entity> lst = em.createQuery(query).getResultList();
-		return lst;
+		try {
+			final CriteriaQuery<Entity> query = entityManager.getCriteriaBuilder().createQuery(getEntityClass());
+			query.from(getEntityClass());
+			final List<Entity> list = entityManager.createQuery(query).getResultList();
+			return list;
+		} catch (Exception e) {
+			throw new DaoException("method getAll entityManager throw exception" + entityClass.getClass(), e);
+		}
 	}
-	
 
 	@PersistenceContext
-	protected void setEntityManager(final EntityManager em) {
-		this.em = em;
+	protected void setEntityManager(final EntityManager entityManager) {
+		this.entityManager = entityManager;
 	}
 
 	private Class<Entity> getEntityClass() {

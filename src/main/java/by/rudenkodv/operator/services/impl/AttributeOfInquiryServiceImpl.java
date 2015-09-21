@@ -18,50 +18,61 @@ public class AttributeOfInquiryServiceImpl implements AttributeOfInquiryService{
 	private static final Logger LOGGER = LoggerFactory.getLogger(AttributeOfInquiry.class);
 	
 	@Inject
-	private AttributeOfInquiryDao dao;
+	private AttributeOfInquiryDao attributeOfInquiryDao;
 
 	@PostConstruct
 	private void init() {
-		//  од который будет выполнен после создание€ бина
-		// this method will be called by Spring after bean instantiation. Can be
-		// used for any initialization process.
 		LOGGER.info("Instance of Responses is created. Class is: {}",
 				getClass().getName());
 	}
 
 	@Override
 	public AttributeOfInquiry get(Long id) {
-		AttributeOfInquiry entity = dao.getById(id);
-		return entity;
+		try {
+			return attributeOfInquiryDao.getById(id);
+		} catch (Exception e) {
+			throw new ServiceException("The get method has throwen an exception for id:" + id, e);
+		}
 	}
 
 	@Override
 	public void saveOrUpdate(AttributeOfInquiry attributeOfInquiry) {
-		if (attributeOfInquiry.getId() == null) {
-			LOGGER.debug("Save new: {attributeOfInquiry}", attributeOfInquiry);
-			dao.insert(attributeOfInquiry);
-		} else {
-			LOGGER.debug("Update: {attributeOfInquiry}", attributeOfInquiry);
-			dao.update(attributeOfInquiry);
+		try {
+			if (attributeOfInquiry.getId() == null) {
+				attributeOfInquiryDao.insert(attributeOfInquiry);
+			} else {
+				attributeOfInquiryDao.update(attributeOfInquiry);
+			}
+		} catch (Exception e) {
+			throw new ServiceException("The saveOrUpdate method has throwen an exception for id:" + attributeOfInquiry.getId(), e);
 		}
 	}
 
 	@Override
 	public void delete(AttributeOfInquiry attributeOfInquiry) {
-		LOGGER.debug("Remove: {attributeOfInquiry}", attributeOfInquiry);
-		dao.delete(attributeOfInquiry.getId());
-
+		try {
+			attributeOfInquiryDao.delete(attributeOfInquiry.getId());
+		} catch (Exception e) {
+			throw new ServiceException("The delete method has throwen an exception for id:" + attributeOfInquiry.getId(), e);
+		}
 	}
 
 	@Override
 	public void deleteAll() {
-		LOGGER.debug("Remove all attributeOfInquiry");
-		dao.deleteAll();
+		try {
+			attributeOfInquiryDao.deleteAll();
+		} catch (Exception e) {
+			throw new ServiceException("The deleteAll method has throwen an exception", e);
+		}
 	}
 
 	@Override
 	public List<AttributeOfInquiry> getAllAttributeOfInquiry() {
-		return dao.getAll();
+		try {
+			return attributeOfInquiryDao.getAll();
+		} catch (Exception e) {
+			throw new ServiceException("The getAllAttributeOfInquiry method has throwen an exception", e);
+		}
 	}
 
 

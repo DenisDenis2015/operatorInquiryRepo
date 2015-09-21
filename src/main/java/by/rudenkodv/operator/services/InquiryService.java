@@ -2,8 +2,6 @@ package by.rudenkodv.operator.services;
 
 import java.util.List;
 
-import javax.persistence.metamodel.SingularAttribute;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import by.rudenkodv.operator.model.Inquiry;

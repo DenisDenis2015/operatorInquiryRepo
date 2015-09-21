@@ -19,25 +19,22 @@ public class Inquiry implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//@NotNull	
+	@NotNull	
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Topic.class)
 	private Topic topic;
 	
-	
-	//@NotNull	
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AttributeOfInquiry.class)
 	private AttributeOfInquiry attributeOfInquiry;
 	
 	@Column
-	//@NotNull
 	private String description;
 	
 	@Column
-	//@NotNull
+	@NotNull
 	private Date createDate;
 	
 	@Column
-	//@NotNull
+	@NotNull
 	private String customerName;
 
 	public Long getId() {
@@ -87,8 +84,4 @@ public class Inquiry implements Serializable {
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-
-
-	
-	
 }

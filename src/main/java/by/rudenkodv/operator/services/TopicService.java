@@ -8,8 +8,6 @@ import by.rudenkodv.operator.model.Topic;
 
 public interface TopicService {
 
-	
-	
 	@Transactional
 	void saveOrUpdate(Topic topic);
 
@@ -20,9 +18,6 @@ public interface TopicService {
 	void deleteAll();
 		
 	Topic get(Long id);
-	
-	//Long getCount();
-	
+		
 	List<Topic> getAllTopic();
-
 }

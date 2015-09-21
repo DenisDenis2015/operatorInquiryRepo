@@ -17,6 +17,4 @@ public interface AbstractDao<ID, Entity> {
 	Entity insert(Entity entity);
 
 	Entity update(Entity entity);
-	
-
 }

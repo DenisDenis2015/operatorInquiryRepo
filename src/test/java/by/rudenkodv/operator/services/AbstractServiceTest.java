@@ -130,6 +130,4 @@ public abstract class AbstractServiceTest {
 	protected double randomDooble(){
 		return 1000  * random.nextDouble();
 	}
-	
-
 }
