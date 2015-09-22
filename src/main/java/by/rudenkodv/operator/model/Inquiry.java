@@ -10,6 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -38,6 +40,8 @@ public class Inquiry implements Serializable {
 	private String customerName;
 	
 	@OneToMany(fetch = FetchType.LAZY, targetEntity = AttributeOfInquiry.class)
+	@JoinTable(name="AttributeOfInquiry")
+	@JoinColumn(name = "attributeId")
 	private Set<AttributeOfInquiry> attributes;
 
 	public Set<AttributeOfInquiry> getAttributes() {
