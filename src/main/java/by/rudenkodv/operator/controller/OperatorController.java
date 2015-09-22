@@ -34,6 +34,7 @@ public class OperatorController {
 	@RequestMapping(value = "/topics", method = RequestMethod.GET)
 	@Produces({ MediaType.APPLICATION_JSON})
 	public @ResponseBody List<Topic> getTopics() {
+		LOGGER.debug("Get all topics");
 		return topicService.getAllTopic();
 	}
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -52,15 +53,17 @@ public class OperatorController {
 	@RequestMapping(value = "/inquiry/list", method = RequestMethod.GET)
 	@Produces({ MediaType.APPLICATION_JSON})
 	public @ResponseBody List<Inquiry> getInquiry() {
+		LOGGER.debug("Get Inquiry List");
 		return inquiryService.getAllInquiry();
 	}
 	
 	@Produces({ MediaType.APPLICATION_JSON})
 	@Consumes({ MediaType.APPLICATION_JSON})
 	@RequestMapping(value = "/customers/{customerName}/inquiries/{id}", method = RequestMethod.GET)
-	public @ResponseBody Inquiry editInquiriePage(@PathVariable("customerName") String customerName,
+	public @ResponseBody Inquiry getSingleUserInquiry(@PathVariable("customerName") String customerName,
 			@PathVariable("id") long id) {
 		Inquiry inquiry =  inquiryService.singleUserInquiry(customerName, id);
+		LOGGER.debug("getSingleUserInquiry customerName:" + customerName + ",id:" +id);
 		return inquiry;
 	}
 		

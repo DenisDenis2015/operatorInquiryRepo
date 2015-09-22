@@ -14,8 +14,6 @@ import by.rudenkodv.operator.dao.AbstractDao;
 
 public abstract class AbstractDaoImpl<ID, Entity> implements AbstractDao<ID, Entity> {
 
-	protected final Random random = new Random();
-
 	private EntityManager entityManager;
 
 	public EntityManager getEntityManager() {

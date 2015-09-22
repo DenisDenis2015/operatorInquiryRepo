@@ -2,6 +2,7 @@ package by.rudenkodv.operator.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -23,8 +25,6 @@ public class Inquiry implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Topic.class)
 	private Topic topic;
 	
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AttributeOfInquiry.class)
-	private AttributeOfInquiry attributeOfInquiry;
 	
 	@Column
 	private String description;
@@ -36,6 +36,17 @@ public class Inquiry implements Serializable {
 	@Column
 	@NotNull
 	private String customerName;
+	
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = AttributeOfInquiry.class)
+	private Set<AttributeOfInquiry> attributes;
+
+	public Set<AttributeOfInquiry> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Set<AttributeOfInquiry> attributes) {
+		this.attributes = attributes;
+	}
 
 	public Long getId() {
 		return id;
@@ -51,14 +62,6 @@ public class Inquiry implements Serializable {
 
 	public void setTopic(Topic topic) {
 		this.topic = topic;
-	}
-
-	public AttributeOfInquiry getAttributeOfInquiry() {
-		return attributeOfInquiry;
-	}
-
-	public void setAttributeOfInquiry(AttributeOfInquiry attributeOfInquiry) {
-		this.attributeOfInquiry = attributeOfInquiry;
 	}
 
 	public String getDescription() {

@@ -4,9 +4,11 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class AttributeOfInquiry implements Serializable{
@@ -15,14 +17,14 @@ public class AttributeOfInquiry implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
-	private String model;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Inquiry.class)
+	private Long attributeId;
 	
 	@Column
-	private String adress;
+	private String name;
 	
 	@Column
-	private String city;
+	private String value;
 
 	public Long getId() {
 		return id;
@@ -32,27 +34,29 @@ public class AttributeOfInquiry implements Serializable{
 		this.id = id;
 	}
 
-	public String getModel() {
-		return model;
+	public Long getAttributeId() {
+		return attributeId;
 	}
 
-	public void setModel(String model) {
-		this.model = model;
+	public void setAttributeId(Long attributeId) {
+		this.attributeId = attributeId;
 	}
 
-	public String getAdress() {
-		return adress;
+	public String getName() {
+		return name;
 	}
 
-	public void setAdress(String adress) {
-		this.adress = adress;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getCity() {
-		return city;
+	public String getValue() {
+		return value;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+	public void setValue(String value) {
+		this.value = value;
+	}	
+	
+	
 }
