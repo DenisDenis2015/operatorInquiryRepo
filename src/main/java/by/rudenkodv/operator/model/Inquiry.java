@@ -2,6 +2,7 @@ package by.rudenkodv.operator.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -39,9 +40,8 @@ public class Inquiry implements Serializable {
 	@NotNull
 	private String customerName;
 	
-	@OneToMany(fetch = FetchType.LAZY, targetEntity = AttributeOfInquiry.class)
-	@JoinTable(name="AttributeOfInquiry")
-	@JoinColumn(name = "attributeId")
+	@OneToMany(fetch = FetchType.EAGER, targetEntity = AttributeOfInquiry.class)
+	@JoinColumn(name = "inquiry")
 	private Set<AttributeOfInquiry> attributes;
 
 	public Set<AttributeOfInquiry> getAttributes() {

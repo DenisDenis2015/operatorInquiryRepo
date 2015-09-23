@@ -18,7 +18,7 @@ public class AttributeOfInquiry implements Serializable{
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Inquiry.class)
-	private Long attributeId;
+	private Inquiry inquiry;
 	
 	@Column
 	private String name;
@@ -34,12 +34,12 @@ public class AttributeOfInquiry implements Serializable{
 		this.id = id;
 	}
 
-	public Long getAttributeId() {
-		return attributeId;
+	public Inquiry getAttributeId() {
+		return inquiry;
 	}
 
-	public void setAttributeId(Long attributeId) {
-		this.attributeId = attributeId;
+	public void setAttributeId(Inquiry inquiry) {
+		this.inquiry = inquiry;
 	}
 
 	public String getName() {
