@@ -1,7 +1,7 @@
 package by.rudenkodv.operator.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,8 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
@@ -36,14 +34,13 @@ public class Inquiry implements Serializable {
 	
 	@Column
 	@NotNull
-	private Date createDate;
+	private Timestamp createDate;
 	
 	@Column
 	@NotNull
 	private String customerName;
 	
 	@OneToMany(fetch = FetchType.EAGER, targetEntity = AttributeOfInquiry.class , mappedBy="inquiry")
-//	@JoinColumn(name = "inquiry_id")
 	@JsonManagedReference
 	private Set<AttributeOfInquiry> attributes = new HashSet<AttributeOfInquiry>();
 
@@ -79,11 +76,11 @@ public class Inquiry implements Serializable {
 		this.description = description;
 	}
 
-	public Date getCreateDate() {
+	public Timestamp getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Date createDate) {
+	public void setCreateDate(Timestamp createDate) {
 		this.createDate = createDate;
 	}
 

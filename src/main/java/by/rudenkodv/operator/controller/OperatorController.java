@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import by.rudenkodv.operator.model.AttributeOfInquiry;
 import by.rudenkodv.operator.model.Inquiry;
 import by.rudenkodv.operator.model.Topic;
+import by.rudenkodv.operator.services.AttributeOfInquiryService;
 import by.rudenkodv.operator.services.InquiryService;
 import by.rudenkodv.operator.services.TopicService;
 
@@ -27,6 +29,9 @@ public class OperatorController {
 
 	@Inject
 	private InquiryService inquiryService;
+	
+	@Inject
+	private AttributeOfInquiryService attributeOfInquiryService; 
 
 	@Inject
 	private TopicService topicService;
@@ -71,9 +76,9 @@ public class OperatorController {
 	@Consumes({ MediaType.APPLICATION_JSON})
 	@RequestMapping(value = "/customers/{customerName}/inquiries/{id}", method = RequestMethod.PUT)
 	public @ResponseBody void updateUserInquiry(@RequestBody Inquiry inquiry, @PathVariable("customerName") String customerName,
-			@PathVariable("id") long id){	
+			@PathVariable("id") long id){
 		inquiryService.saveOrUpdate(inquiry);
-		 LOGGER.debug("Update  inquiry by request PUT : /customers/"+inquiry.getCustomerName()+"/inquiries/"+inquiry.getId());
+		LOGGER.debug("Update  inquiry by request PUT : /customers/"+inquiry.getCustomerName()+"/inquiries/"+inquiry.getId());
 	}	
 	
 	@Consumes({ MediaType.APPLICATION_JSON})

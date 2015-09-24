@@ -1,18 +1,18 @@
 package by.rudenkodv.operator.services.impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.jws.WebService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import by.rudenkodv.operator.dao.AttributeOfInquiryDao;
 import by.rudenkodv.operator.dao.InquiryDao;
 import by.rudenkodv.operator.dao.TopicDao;
+import by.rudenkodv.operator.model.AttributeOfInquiry;
 import by.rudenkodv.operator.model.Inquiry;
 import by.rudenkodv.operator.services.AttributeOfInquiryService;
 import by.rudenkodv.operator.services.InquiryService;
@@ -46,7 +46,7 @@ public class InquiryServiceImpl implements InquiryService{
 		}
 	}
 
-	@Override
+/*	@Override
 	public void saveOrUpdate(Inquiry inquiry) {
 		try {
 			if (inquiry.getId() == null) {
@@ -57,6 +57,36 @@ public class InquiryServiceImpl implements InquiryService{
 		} catch (Exception e) {
 			throw new ServiceException("The Update method has throwen an exception fo id:" + inquiry.getId(), e);
 		}
+	}*/
+	
+	@Override
+	public void saveOrUpdate(Inquiry inquiry) {
+		if(inquiry.getId()!=null){
+			Inquiry inq = daoInquiry.getById(inquiry.getId());
+			for (Iterator<AttributeOfInquiry> it = inq.getAttributes().iterator(); it.hasNext(); ) {
+				 AttributeOfInquiry attrOfInq = it.next();
+				 attrOfInqService.delete(attrOfInq);
+			 }		
+		}
+			if (inquiry.getId() == null) {
+				daoInquiry.insert(inquiry);				
+				if(inquiry.getAttributes()!=null){				
+					 saveOrUpdateAttrInquiry(inquiry);					
+				}											
+			} else {							
+				daoInquiry.update(inquiry);				
+				if(inquiry.getAttributes()!=null){					
+					 saveOrUpdateAttrInquiry(inquiry);					
+				}
+			}
+	}
+
+	private void saveOrUpdateAttrInquiry(Inquiry inquiry) {
+		for (Iterator<AttributeOfInquiry> it = inquiry.getAttributes().iterator(); it.hasNext(); ) {
+			 AttributeOfInquiry attrOfInq = it.next();
+			 attrOfInq.setInquiry(inquiry);
+			 attrOfInqService.saveOrUpdate(attrOfInq);
+		 }
 	}
 
 	@Override
