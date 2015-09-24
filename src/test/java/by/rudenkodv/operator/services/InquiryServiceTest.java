@@ -1,6 +1,9 @@
 package by.rudenkodv.operator.services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 
@@ -57,8 +60,17 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		Topic topic = prepareTopic();				
 		AttributeOfInquiry attributeOfInquiry = prepareAttributeOfInquiry();
 		Inquiry inquiry = prepareInquiryEntity(attributeOfInquiry, topic);
-	//	List<Inquiry> list = inquiryService.getAllInquiry();
-
+		List<Inquiry> list = inquiryService.getAllInquiry();
+		LOGGER.debug("----------");
+		LOGGER.debug(String.valueOf(inquiry.getAttributes().size()));
+		
+		LOGGER.debug(attributeOfInquiry.getInquiry().getCustomerName());
+		Set<AttributeOfInquiry> a = new HashSet<AttributeOfInquiry>();
+		a =  list.get(1).getAttributes();
+		System.out.println(list.get(1).getCustomerName().toString());
+		for (AttributeOfInquiry s : a) {
+		    System.out.println(s.getName() + "  " + s.getValue() + " id: "  + s.getId());
+		}
 	}
 	
 	@Ignore
@@ -183,6 +195,7 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		inquiry.setCreateDate(randomDate());
 		inquiry.setCustomerName(randomString());
 		inquiry.setDescription(randomString());
+		attributeOfInquiry.setInquiry(inquiry);
 	//	inquiry.setAttributeOfInquiry(attributeOfInquiry);		
 		saveEntityInDB(attributeOfInquiry, topic, inquiry);			
 		return inquiry;		
@@ -191,8 +204,9 @@ public class InquiryServiceTest extends AbstractServiceTest {
 	private void saveEntityInDB(AttributeOfInquiry attributeOfInquiry,
 		Topic topic, Inquiry inquiry) {
 		topicService.saveOrUpdate(topic);
-		attributeOfInquiryService.saveOrUpdate(attributeOfInquiry);
 		inquiryService.saveOrUpdate(inquiry);
+		attributeOfInquiryService.saveOrUpdate(attributeOfInquiry);
+		
 	}
 
 	private void clearData() {

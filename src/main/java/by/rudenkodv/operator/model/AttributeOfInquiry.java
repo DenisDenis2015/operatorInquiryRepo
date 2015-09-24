@@ -8,7 +8,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class AttributeOfInquiry implements Serializable{
@@ -17,7 +20,9 @@ public class AttributeOfInquiry implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@JsonBackReference
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Inquiry.class)
+	@JoinColumn(name="id" , insertable=false , updatable=false)
 	private Inquiry inquiry;
 	
 	@Column
@@ -34,11 +39,11 @@ public class AttributeOfInquiry implements Serializable{
 		this.id = id;
 	}
 
-	public Inquiry getAttributeId() {
+	public Inquiry getInquiry() {
 		return inquiry;
 	}
 
-	public void setAttributeId(Inquiry inquiry) {
+	public void setInquiry(Inquiry inquiry) {
 		this.inquiry = inquiry;
 	}
 
@@ -56,7 +61,9 @@ public class AttributeOfInquiry implements Serializable{
 
 	public void setValue(String value) {
 		this.value = value;
-	}	
+	}
+
+
 	
 	
 }

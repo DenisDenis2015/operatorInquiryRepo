@@ -17,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Inquiry implements Serializable {
 	
@@ -40,9 +42,10 @@ public class Inquiry implements Serializable {
 	@NotNull
 	private String customerName;
 	
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = AttributeOfInquiry.class)
-	@JoinColumn(name = "inquiry")
-	private Set<AttributeOfInquiry> attributes;
+	@OneToMany(fetch = FetchType.EAGER, targetEntity = AttributeOfInquiry.class , mappedBy="inquiry")
+//	@JoinColumn(name = "inquiry_id")
+	@JsonManagedReference
+	private Set<AttributeOfInquiry> attributes = new HashSet<AttributeOfInquiry>();
 
 	public Set<AttributeOfInquiry> getAttributes() {
 		return attributes;

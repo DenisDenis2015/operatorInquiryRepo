@@ -58,7 +58,7 @@ public class InquiryDaoImpl extends AbstractDaoImpl<Long, Inquiry>implements Inq
 			TypedQuery<Inquiry> query = getEntityManager().createQuery(criteria);
 
 			List<Inquiry> results = query.getResultList();
-
+			
 			return results;
 
 		} catch (Exception e) {

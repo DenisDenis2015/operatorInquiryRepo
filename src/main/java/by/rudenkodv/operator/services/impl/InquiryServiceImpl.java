@@ -50,25 +50,8 @@ public class InquiryServiceImpl implements InquiryService{
 	public void saveOrUpdate(Inquiry inquiry) {
 		try {
 			if (inquiry.getId() == null) {
-				if (inquiry.getAttributeOfInquiry().getAdress().isEmpty() &&
-						inquiry.getAttributeOfInquiry().getCity().isEmpty() &&
-						inquiry.getAttributeOfInquiry().getModel().isEmpty())
-				{
-					inquiry.setAttributeOfInquiry(null);
-				} else {
-					attrOfInqService.saveOrUpdate(inquiry.getAttributeOfInquiry());
-				}
-
 				daoInquiry.insert(inquiry);
-			} else {
-				if (inquiry.getAttributeOfInquiry().getAdress().isEmpty() &&
-						inquiry.getAttributeOfInquiry().getCity().isEmpty() &&
-						inquiry.getAttributeOfInquiry().getModel().isEmpty())
-				{
-					inquiry.setAttributeOfInquiry(null);
-				}else {
-					attrOfInqService.saveOrUpdate(inquiry.getAttributeOfInquiry());
-				}
+			} else {			
 				daoInquiry.update(inquiry);
 			}
 		} catch (Exception e) {
@@ -79,10 +62,7 @@ public class InquiryServiceImpl implements InquiryService{
 	@Override
 	public void delete(Inquiry inquiry) {
 		try {
-			daoInquiry.delete(inquiry.getId());
-			if (inquiry.getAttributeOfInquiry() != null){
-				attrOfInqService.delete(inquiry.getAttributeOfInquiry());
-			}
+			daoInquiry.delete(inquiry.getId());			
 		} catch (Exception e) {
 			throw new ServiceException("The delete method has throwen an exception fo id:" + inquiry.getId(), e);
 		}
