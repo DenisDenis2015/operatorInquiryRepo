@@ -22,7 +22,6 @@ public class AttributeOfInquiry implements Serializable{
 	
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Inquiry.class)
-	@JoinColumn(name="id" , insertable=false , updatable=false)
 	private Inquiry inquiry;
 	
 	@Column
