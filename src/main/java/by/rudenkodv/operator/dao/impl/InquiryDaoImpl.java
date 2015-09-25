@@ -77,7 +77,7 @@ public class InquiryDaoImpl extends AbstractDaoImpl<Long, Inquiry>implements Inq
 
 			Expression<String> path = root.get("customerName");
 
-			Predicate param = cBuilder.like(path, str + "%");
+			Predicate param = cBuilder.like(path, str);
 
 			criteria.select(root).where(param);
 
