@@ -31,6 +31,9 @@ public class OperatorController {
 	private InquiryService inquiryService;
 	
 	@Inject
+	private AttributeOfInquiryService attributeOfInquiryService; 
+
+	@Inject
 	private TopicService topicService;
 	
 	@RequestMapping(value = "/topics", method = RequestMethod.GET)
@@ -68,15 +71,6 @@ public class OperatorController {
 		LOGGER.debug("getSingleUserInquiry customerName:" + customerName + ",id:" +id);
 		return inquiry;
 	}
-	
-	@Produces({ MediaType.APPLICATION_JSON})
-	@Consumes({ MediaType.APPLICATION_JSON})
-	@RequestMapping(value = "/customers/{customerName}/inquiries", method = RequestMethod.GET)
-	public @ResponseBody List<Inquiry> getSingleUserListInquiry(@PathVariable("customerName") String customerName) {
-		List<Inquiry> inquiryList =  inquiryService.searchByString(customerName);
-		LOGGER.debug("getSingleUserListInquiry customerName:" + customerName);
-		return inquiryList;
-	}
 		
 	@Produces({ MediaType.APPLICATION_JSON})
 	@Consumes({ MediaType.APPLICATION_JSON})
@@ -95,4 +89,11 @@ public class OperatorController {
 		LOGGER.debug("DELETE  inquiry by request DELETE forID : {id}" + inquiry.getId());
 		inquiryService.delete(inquiry);
 	}		
+	
+	@Produces({ MediaType.APPLICATION_JSON})
+	@RequestMapping(value = "/search/{query}", method = RequestMethod.GET)
+	public @ResponseBody List<Inquiry> findByName (@PathVariable("query") String query) {
+		LOGGER.debug("GET inquiry by request string - " + query);
+		return inquiryService.searchByString(query);
+	}
 }

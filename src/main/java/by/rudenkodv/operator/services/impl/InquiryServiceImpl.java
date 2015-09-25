@@ -45,12 +45,28 @@ public class InquiryServiceImpl implements InquiryService{
 			throw new ServiceException("The get method has throwen an exception fo id:" + id, e);
 		}
 	}
+
+/*	@Override
+	public void saveOrUpdate(Inquiry inquiry) {
+		try {
+			if (inquiry.getId() == null) {
+				daoInquiry.insert(inquiry);
+			} else {			
+				daoInquiry.update(inquiry);
+			}
+		} catch (Exception e) {
+			throw new ServiceException("The Update method has throwen an exception fo id:" + inquiry.getId(), e);
+		}
+	}*/
 	
 	@Override
 	public void saveOrUpdate(Inquiry inquiry) {
 		if(inquiry.getId()!=null){
 			Inquiry inq = daoInquiry.getById(inquiry.getId());
-			deleteAttrOfInq(inq);		
+			for (Iterator<AttributeOfInquiry> it = inq.getAttributes().iterator(); it.hasNext(); ) {
+				 AttributeOfInquiry attrOfInq = it.next();
+				 attrOfInqService.delete(attrOfInq);
+			 }		
 		}
 			if (inquiry.getId() == null) {
 				daoInquiry.insert(inquiry);				
@@ -65,13 +81,6 @@ public class InquiryServiceImpl implements InquiryService{
 			}
 	}
 
-	private void deleteAttrOfInq(Inquiry inq) {
-		for (Iterator<AttributeOfInquiry> it = inq.getAttributes().iterator(); it.hasNext(); ) {
-			 AttributeOfInquiry attrOfInq = it.next();
-			 attrOfInqService.delete(attrOfInq);
-		 }
-	}
-
 	private void saveOrUpdateAttrInquiry(Inquiry inquiry) {
 		for (Iterator<AttributeOfInquiry> it = inquiry.getAttributes().iterator(); it.hasNext(); ) {
 			 AttributeOfInquiry attrOfInq = it.next();
@@ -83,9 +92,6 @@ public class InquiryServiceImpl implements InquiryService{
 	@Override
 	public void delete(Inquiry inquiry) {
 		try {
-			if(inquiry.getAttributes()!=null){
-				deleteAttrOfInq(inquiry);
-			}
 			daoInquiry.delete(inquiry.getId());			
 		} catch (Exception e) {
 			throw new ServiceException("The delete method has throwen an exception fo id:" + inquiry.getId(), e);
