@@ -24,7 +24,7 @@ public class RestBasicTest {
 	@Test
 	public void getTopics() throws JSONException {
 		
-		//make get request to fetch topic
+		//make get request to fetch capital of norway
 		Response resp = get(rootURL + "/topics");
 		
 		//Fetching response in JSON

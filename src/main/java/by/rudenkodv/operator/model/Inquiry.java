@@ -18,19 +18,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class Inquiry implements Serializable{
+public class Inquiry implements Serializable {
 	
-	public Inquiry() {
-	}
-		
-	public Inquiry(Long id, Topic topic, String description, Timestamp createDate, String customerName) {
-		this.id = id;
-		this.topic = topic;
-		this.description = description;
-		this.createDate = createDate;
-		this.customerName = customerName;
-	}
-
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -101,60 +90,5 @@ public class Inquiry implements Serializable{
 
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
-		result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
-		result = prime * result + ((customerName == null) ? 0 : customerName.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((topic == null) ? 0 : topic.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Inquiry other = (Inquiry) obj;
-		if (attributes == null) {
-			if (other.attributes != null)
-				return false;
-		} else if (!attributes.equals(other.attributes))
-			return false;
-		if (createDate == null) {
-			if (other.createDate != null)
-				return false;
-		} else if (!createDate.equals(other.createDate))
-			return false;
-		if (customerName == null) {
-			if (other.customerName != null)
-				return false;
-		} else if (!customerName.equals(other.customerName))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (topic == null) {
-			if (other.topic != null)
-				return false;
-		} else if (!topic.equals(other.topic))
-			return false;
-		return true;
 	}
 }
