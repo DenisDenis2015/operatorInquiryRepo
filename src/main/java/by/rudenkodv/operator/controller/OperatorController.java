@@ -3,6 +3,7 @@ package by.rudenkodv.operator.controller;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -10,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,11 @@ public class OperatorController {
 	
 	@Inject
 	private TopicService topicService;
+	
+	 @ExceptionHandler(Exception.class)
+	 public void handleIOException(Exception ex, HttpServletRequest request) {
+	     LOGGER.debug("Throw exception in mvc controller ", ex.getCause());
+	 }
 	
 	@RequestMapping(value = "/topics", method = RequestMethod.GET)
 	@Produces({ MediaType.APPLICATION_JSON})
