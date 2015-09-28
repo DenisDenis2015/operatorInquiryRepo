@@ -2,6 +2,7 @@ package by.rudenkodv.operator.services.impl;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -20,7 +21,7 @@ import by.rudenkodv.operator.services.InquiryService;
 @Service
 public class InquiryServiceImpl implements InquiryService{
 	private static final Logger LOGGER = LoggerFactory.getLogger(InquiryService.class);
-	
+		
 	@Inject
 	private InquiryDao daoInquiry;
 	
@@ -28,7 +29,11 @@ public class InquiryServiceImpl implements InquiryService{
 	private AttributeOfInquiryService attrOfInqService;	
 	
 	@Inject
-	private TopicDao daoTopic;	
+	private TopicDao daoTopic;
+	
+	public void setInquiryDao(InquiryDao daoInquiry){
+		this.daoInquiry = daoInquiry;
+	}
 
 	@PostConstruct
 	private void init() {
@@ -48,28 +53,37 @@ public class InquiryServiceImpl implements InquiryService{
 	
 	@Override
 	public void saveOrUpdate(Inquiry inquiry) {
-		if(inquiry.getId()!=null){
-			Inquiry inq = daoInquiry.getById(inquiry.getId());
-			deleteAttrOfInq(inq);		
-		}
-			if (inquiry.getId() == null) {
-				daoInquiry.insert(inquiry);				
-				if(inquiry.getAttributes()!=null){				
-					 saveOrUpdateAttrInquiry(inquiry);					
-				}											
-			} else {							
-				daoInquiry.update(inquiry);				
-				if(inquiry.getAttributes()!=null){					
-					 saveOrUpdateAttrInquiry(inquiry);					
-				}
+		try {
+			if(inquiry.getId()!=null){
+				Inquiry inq = daoInquiry.getById(inquiry.getId());
+				deleteAttrOfInq(inq);		
 			}
+				if (inquiry.getId() == null) {
+					daoInquiry.insert(inquiry);				
+					if(inquiry.getAttributes()!=null){				
+						 saveOrUpdateAttrInquiry(inquiry);					
+					}											
+				} else {							
+					daoInquiry.update(inquiry);				
+					if(inquiry.getAttributes()!=null){					
+						 saveOrUpdateAttrInquiry(inquiry);					
+					}
+				}
+		} catch (Exception e) {
+			throw new ServiceException("The saveOrUpdate method has throwen an exception fo id:", e);
+		}
 	}
 
 	private void deleteAttrOfInq(Inquiry inq) {
-		for (Iterator<AttributeOfInquiry> it = inq.getAttributes().iterator(); it.hasNext(); ) {
-			 AttributeOfInquiry attrOfInq = it.next();
-			 attrOfInqService.delete(attrOfInq);
-		 }
+		try {
+			for (Iterator<AttributeOfInquiry> it = inq.getAttributes().iterator(); it.hasNext(); ) {
+				 AttributeOfInquiry attrOfInq = it.next();
+				 attrOfInqService.delete(attrOfInq);
+			 }
+		} catch (NullPointerException e) {
+			LOGGER.debug("null poin exp, Set<AttributeOfInquiry> attributes is empty for request Inquiry", inq);
+			return;
+		}
 	}
 
 	private void saveOrUpdateAttrInquiry(Inquiry inquiry) {

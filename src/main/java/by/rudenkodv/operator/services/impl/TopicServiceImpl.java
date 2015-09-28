@@ -19,6 +19,10 @@ public class TopicServiceImpl implements TopicService{
 	
 	@Inject
 	private TopicDao dao;
+	
+	public void setTopicDao(TopicDao dao){
+		this.dao = dao;
+	}
 
 	@PostConstruct
 	private void init() {
