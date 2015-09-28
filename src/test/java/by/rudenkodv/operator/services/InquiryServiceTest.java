@@ -1,6 +1,6 @@
 package by.rudenkodv.operator.services;
 
-import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -10,8 +10,11 @@ import javax.inject.Inject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,8 +25,9 @@ import by.rudenkodv.operator.model.Topic;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring-context-test.xml"})
 public class InquiryServiceTest extends AbstractServiceTest {
-	
-	
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(InquiryServiceTest.class);
+
 	@Inject
 	private InquiryService inquiryService;
 
@@ -32,13 +36,13 @@ public class InquiryServiceTest extends AbstractServiceTest {
 	
 	@Inject
 	private AttributeOfInquiryService attributeOfInquiryService;
-	
-	@Before
+
+//	@Before
 	public void cleanUpData() {
 		clearData();
 	}
 
-    @After
+//	@After
 	public void cleanUpDataAfterTest() {
 		clearData();
 	}
@@ -49,41 +53,27 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		Assert.assertNotNull(topicService);
 		Assert.assertNotNull(attributeOfInquiryService);
 	}
-	
-	@Test
-	public void testEqualsTrue1(){
-		Inquiry inq1 = new Inquiry(0l, new Topic(0l,"Topic"),"descr",new Timestamp(2323424),"CustomerName");
-		Inquiry inq2 = new Inquiry(0l, new Topic(0l,"Topic"),"descr",new Timestamp(2323424),"CustomerName");
-		Assert.assertEquals("Inquiry" +inq1 + "!=" + inq2, inq1,inq2);	
-	}
-	
-	@Test
-	public void testEqualsTrue2(){
-		Inquiry inq1 = new Inquiry(randomLong(), new Topic(randomLong(), randomString()),randomString(),randomTimestamp(),randomString("userName:"));
-		Assert.assertEquals("Inquiry" +inq1 + "!=" + inq1, inq1,inq1);	
-	}
-	
-	@Test
-	public void testEqualsFalse1(){
-		Inquiry inq1 = new Inquiry(randomLong(), new Topic(randomLong(), randomString()),randomString(),randomTimestamp(),randomString("userName:"));
-		Inquiry inq2 = new Inquiry(randomLong(), new Topic(randomLong(), randomString()),randomString(),randomTimestamp(),randomString("Name:"));
-		Assert.assertNotEquals("Inquiry" +inq1 + "==" + inq2, inq1,inq2);	
-	}	
-	
-	@Test
-	public void testEqualsFalse2(){
-		Inquiry inq1 = new Inquiry(randomLong(), new Topic(randomLong(), randomString()),randomString(),randomTimestamp(),randomString("userName:"));
-		Assert.assertNotEquals("Inquiry" +inq1 + "==" + null, inq1,null);	
-	}	
-	
-	@Test
-	public void testHashCode(){
-		int inq1HashCode = new Inquiry(0l, new Topic(0l,"Topic"),"descr",new Timestamp(2323424),"CustomerName").hashCode();
-		int inq2HashCode = new Inquiry(0l, new Topic(0l,"Topic"),"descr",new Timestamp(2323424),"CustomerName").hashCode();
-		Assert.assertEquals("HashCode" +inq1HashCode + "!=" + inq2HashCode, inq1HashCode, inq2HashCode);	
-	}
 
 	
+	@Test
+	public void basicTest() {
+		Topic topic = prepareTopic();				
+		AttributeOfInquiry attributeOfInquiry = prepareAttributeOfInquiry();
+		Inquiry inquiry = prepareInquiryEntity(attributeOfInquiry, topic);
+		List<Inquiry> list = inquiryService.getAllInquiry();
+		LOGGER.debug("----------");
+		LOGGER.debug(String.valueOf(inquiry.getAttributes().size()));
+		
+		LOGGER.debug(attributeOfInquiry.getInquiry().getCustomerName());
+		Set<AttributeOfInquiry> a = new HashSet<AttributeOfInquiry>();
+		a =  list.get(1).getAttributes();
+		System.out.println(list.get(1).getCustomerName().toString());
+		for (AttributeOfInquiry s : a) {
+		    System.out.println(s.getName() + "  " + s.getValue() + " id: "  + s.getId());
+		}
+	}
+	
+	@Ignore
 	@Test
 	public void basicCRUDTest() {
 		Topic topic = prepareTopic();				
@@ -96,11 +86,13 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		saveTest(inquiry, inquiryFromDB);
 		
 		updateTest(inquiry, inquiryFromDB);
-				
+		
+		checkUpdateTest(attributeOfInquiry);
+		
 		Topic topicFromDB = topicService.get(topic.getId());
-		saveUpdateTopicTest(topic, topicFromDB);
+		saveUpdateTopicTest(topic, topicFromDB);		
 	}
-	
+
 	private void saveUpdateTopicTest(Topic topic, Topic topicFromDB) {
 		Assert.assertNotNull(topicFromDB);
 		Assert.assertEquals(topic.getName(), topicFromDB.getName());
@@ -110,6 +102,21 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		topicService.saveOrUpdate(topic);
 		Topic topicFromDBUpdate = topicService.get(topic.getId());
 		Assert.assertNotEquals(topicFromDB.getName(), topicFromDBUpdate.getName());
+	}
+
+	private void checkUpdateTest(AttributeOfInquiry attributeOfInquiry) {
+		AttributeOfInquiry attributeOfInquiryFromDB = attributeOfInquiryService.get(attributeOfInquiry.getId());
+		Assert.assertNotNull(attributeOfInquiryFromDB);
+		Assert.assertEquals(attributeOfInquiry.getAdress(), attributeOfInquiryFromDB.getAdress());
+		Assert.assertEquals(attributeOfInquiry.getCity(), attributeOfInquiryFromDB.getCity());
+		Assert.assertEquals(attributeOfInquiry.getModel(), attributeOfInquiryFromDB.getModel());
+		
+		// update test AttributeOfInquiry
+		attributeOfInquiry.setAdress("Grodno street - 123");
+		attributeOfInquiryService.saveOrUpdate(attributeOfInquiry);
+		AttributeOfInquiry attributeOfInquiryFromDBUpdate = attributeOfInquiryService.get(attributeOfInquiry.getId());
+		Assert.assertNotEquals(attributeOfInquiryFromDBUpdate.getAdress(), attributeOfInquiryFromDB.getAdress());
+		Assert.assertEquals(attributeOfInquiryFromDBUpdate.getModel(), attributeOfInquiryFromDB.getModel());
 	}
 
 	private void updateTest(Inquiry inquiry, Inquiry inquiryFromDB) {
@@ -123,9 +130,11 @@ public class InquiryServiceTest extends AbstractServiceTest {
 	private void saveTest(Inquiry inquiry, Inquiry inquiryFromDB) {
 		Assert.assertEquals(inquiry.getCustomerName(), inquiryFromDB.getCustomerName());
 		Assert.assertEquals(inquiry.getDescription(), inquiryFromDB.getDescription());				
+		Assert.assertEquals(inquiry.getAttributeOfInquiry().getId(), inquiryFromDB.getAttributeOfInquiry().getId());
 		Assert.assertEquals(inquiry.getTopic().getId(), inquiryFromDB.getTopic().getId());
 	}
 	
+	@Ignore
 	@Test
 	public void singleUserInquiry(){
 		Topic topic = prepareTopic();				
@@ -138,6 +147,7 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		
 	}
 	
+	@Ignore	
 	@Test
 	public void listUserInquiry(){
 		Topic topic = prepareTopic();				
@@ -151,6 +161,7 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		
 	}
 	
+	@Ignore
 	@Test
 	public void searchByString(){
 		cleanUpData();
@@ -158,9 +169,9 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		AttributeOfInquiry attributeOfInquiry = prepareAttributeOfInquiry();
 		Inquiry inquiry = prepareInquiryEntity(attributeOfInquiry, topic);
 		String str = randomString();
-		inquiry.setCustomerName(str);
+		inquiry.setCustomerName(randomString(str));
 		inquiryService.saveOrUpdate(inquiry);		
-		List<Inquiry> listInquiry = inquiryService.searchByString(str);
+		List<Inquiry> listInquiry = inquiryService.searchByString(str.substring(0, randInt(1, 5)));
 		Assert.assertEquals(listInquiry.get(0).getCustomerName(), inquiry.getCustomerName());
 		Assert.assertTrue(listInquiry.size()==1);		
 	}
@@ -181,10 +192,11 @@ public class InquiryServiceTest extends AbstractServiceTest {
 	private Inquiry prepareInquiryEntity(AttributeOfInquiry attributeOfInquiry, Topic topic) {
 		Inquiry inquiry = new Inquiry();
 		inquiry.setTopic(topic);
-		inquiry.setCreateDate(randomTimestamp());
+		inquiry.setCreateDate(randomDate());
 		inquiry.setCustomerName(randomString());
 		inquiry.setDescription(randomString());
 		attributeOfInquiry.setInquiry(inquiry);
+	//	inquiry.setAttributeOfInquiry(attributeOfInquiry);		
 		saveEntityInDB(attributeOfInquiry, topic, inquiry);			
 		return inquiry;		
 	}
@@ -196,10 +208,12 @@ public class InquiryServiceTest extends AbstractServiceTest {
 		attributeOfInquiryService.saveOrUpdate(attributeOfInquiry);
 		
 	}
-	
+
 	private void clearData() {
-		attributeOfInquiryService.deleteAll();
 		inquiryService.deleteAll();
 		topicService.deleteAll();
+		attributeOfInquiryService.deleteAll();
+
 	}
+
 }
