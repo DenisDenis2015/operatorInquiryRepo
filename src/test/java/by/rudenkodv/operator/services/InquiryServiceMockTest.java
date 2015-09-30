@@ -45,6 +45,14 @@ public class InquiryServiceMockTest{
     }
     
     @Test
+    public void testGetByIdNonExistUser(){
+    	long id = 222;
+    	Mockito.doReturn(null).when(inquiryDao).getById(id);
+    	Inquiry actual = inquiryService.get(id);
+    	Assert.assertNull(actual);
+    }
+    
+    @Test
     public void testGetByIdNotExistedInquiry() {
         Mockito.doReturn(null).when(inquiryDao).getById(FIRST_INQUIRY.getId());
         Inquiry actual = inquiryService.get(NONEXISTENT_INQUIRY.getId());

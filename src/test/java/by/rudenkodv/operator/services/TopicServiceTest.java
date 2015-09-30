@@ -21,7 +21,7 @@ public class TopicServiceTest extends AbstractServiceTest {
 	public void testEqualsTrue1(){
 		Topic topic1 = new Topic(0l,"Topic");
 		Topic topic2 = new Topic(0l,"Topic");
-		Assert.assertEquals("Inquiry" +topic1 + "!=" + topic2, topic1,topic2);	
+		Assert.assertEquals("Topic" +topic1 + "!=" + topic2, topic1,topic2);	
 	}
 	
 	@Test
